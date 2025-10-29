@@ -1,15 +1,54 @@
 package com.szakdolgozat.scheduler.timetable.domain;
 
-import java.time.DayOfWeek;
-import java.time.LocalTime;
+import lombok.Getter;
+import org.optaplanner.core.api.domain.solution.PlanningEntityCollectionProperty;
+import org.optaplanner.core.api.domain.solution.PlanningScore;
+import org.optaplanner.core.api.domain.solution.PlanningSolution;
+import org.optaplanner.core.api.domain.solution.ProblemFactCollectionProperty;
+import org.optaplanner.core.api.domain.valuerange.ValueRangeProvider;
+import org.optaplanner.core.api.score.buildin.hardsoft.HardSoftScore;
+
 import java.util.List;
 
+//Ebben az osztályban minden input és output data szerepel
+@PlanningSolution
 public class TimeTable {
 
+    //Problem facts, nem változnak a megoldási folyamat közben
+    @Getter
+    @ValueRangeProvider
+    @ProblemFactCollectionProperty
+    private List<TimeSlot> timeSlotList;
 
+    @Getter
+    @ValueRangeProvider
+    @ProblemFactCollectionProperty
+    private List<Room> roomList;
 
+    /*
+        Planning entity, megváltozik megoldás közben
+        Timeslot és room mezők értékei általában null -> planning variables
+        Többi mező mint subject, teacher, studentGroup rendelkeznek értékkel -> problem properties
 
+        Output solution: lessonList, score
 
-    public List<Lesson> getLessonList() {
+     */
+    @Getter
+    @PlanningEntityCollectionProperty
+    private List<Lesson> lessonList;
+
+    @Getter
+    @PlanningScore
+    private HardSoftScore score;
+    //pl: 0hard/-5soft
+
+    public TimeTable() {
     }
+
+    public TimeTable(List<TimeSlot> timeSlotList, List<Room> roomList, List<Lesson> lessonList) {
+        this.timeSlotList = timeSlotList;
+        this.roomList = roomList;
+        this.lessonList = lessonList;
+    }
+
 }

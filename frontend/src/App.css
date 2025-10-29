@@ -1,42 +1,197 @@
-#root {
-  max-width: 1280px;
+.app-container {
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+h1 {
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 30px;
+}
+
+.controls {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.generate-btn {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.generate-btn:hover:not(:disabled) {
+  background-color: #2980b9;
+}
+
+.generate-btn:disabled {
+  background-color: #95a5a6;
+  cursor: not-allowed;
+}
+
+.error {
+  background-color: #e74c3c;
+  color: white;
+  padding: 15px;
+  border-radius: 5px;
+  margin-bottom: 20px;
   text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.timetable-container {
+  margin-top: 30px;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+.score-info {
+  text-align: center;
+  background-color: #ecf0f1;
+  padding: 15px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.score-info h3 {
+  margin: 0;
+  color: #2c3e50;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border-radius: 8px;
+}
+
+.timetable {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+}
+
+.timetable th {
+  background-color: #34495e;
+  color: white;
+  padding: 15px;
+  text-align: center;
+  font-weight: 600;
+  border: 1px solid #2c3e50;
+}
+
+.timetable td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  min-width: 120px;
+  vertical-align: top;
+}
+
+.time-cell {
+  background-color: #ecf0f1;
+  font-weight: 600;
+  text-align: center;
+  min-width: 100px;
+}
+
+.time-cell .day {
+  font-size: 14px;
+  color: #7f8c8d;
+  margin-bottom: 5px;
+}
+
+.time-cell .time {
+  font-size: 16px;
+  color: #2c3e50;
+}
+
+.lesson-cell {
+  background-color: #fff;
+  transition: background-color 0.2s;
+}
+
+.lesson-cell:hover {
+  background-color: #f8f9fa;
+}
+
+.lesson {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 8px;
+  border-radius: 5px;
+  margin-bottom: 5px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.lesson:last-child {
+  margin-bottom: 0;
+}
+
+.lesson .subject {
+  font-weight: 700;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.lesson .teacher {
+  font-size: 12px;
+  opacity: 0.9;
+  margin-bottom: 2px;
+}
+
+.lesson .student-group {
+  font-size: 11px;
+  opacity: 0.8;
+  font-style: italic;
+}
+
+.unassigned-section {
+  margin-top: 30px;
+  padding: 20px;
+  background-color: #fff3cd;
+  border-radius: 5px;
+  border-left: 4px solid #ffc107;
+}
+
+.unassigned-section h3 {
+  margin-top: 0;
+  color: #856404;
+}
+
+.unassigned-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.unassigned-section li {
+  padding: 8px;
+  margin-bottom: 5px;
+  background-color: white;
+  border-radius: 3px;
+  color: #856404;
+}
+
+@media (max-width: 768px) {
+  .app-container {
+    padding: 10px;
   }
-  to {
-    transform: rotate(360deg);
+
+  .timetable th,
+  .timetable td {
+    padding: 8px;
+    font-size: 12px;
+    min-width: 80px;
   }
-}
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
+  .lesson .subject {
+    font-size: 12px;
   }
-}
 
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
+  .lesson .teacher,
+  .lesson .student-group {
+    font-size: 10px;
+  }
 }
