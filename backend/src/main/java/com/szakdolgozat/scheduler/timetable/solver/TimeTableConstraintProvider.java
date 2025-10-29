@@ -1,7 +1,6 @@
 package com.szakdolgozat.scheduler.timetable.solver;
 
 import com.szakdolgozat.scheduler.timetable.domain.Lesson;
-import com.szakdolgozat.scheduler.timetable.domain.Teacher;
 import org.optaplanner.core.api.score.buildin.hardsoft.HardSoftScore;
 import org.optaplanner.core.api.score.stream.Constraint;
 import org.optaplanner.core.api.score.stream.ConstraintFactory;
