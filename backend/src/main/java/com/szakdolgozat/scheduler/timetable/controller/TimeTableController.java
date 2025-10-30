@@ -1,6 +1,6 @@
 package com.szakdolgozat.scheduler.timetable.controller;
 
-import com.szakdolgozat.scheduler.service.TimeTableService;
+import com.szakdolgozat.scheduler.timetable.service.TimeTableService;
 import com.szakdolgozat.scheduler.timetable.domain.TimeTable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

@@ -1,5 +1,6 @@
-package com.szakdolgozat.scheduler.service;
+package com.szakdolgozat.scheduler.timetable.service;
 
+import com.szakdolgozat.scheduler.cloudbalancing.domain.CloudBalance;
 import com.szakdolgozat.scheduler.timetable.domain.Lesson;
 import com.szakdolgozat.scheduler.timetable.domain.Room;
 import com.szakdolgozat.scheduler.timetable.domain.TimeSlot;
@@ -8,6 +9,7 @@ import com.szakdolgozat.scheduler.timetable.solver.TimeTableConstraintProvider;
 import org.optaplanner.core.api.solver.Solver;
 import org.optaplanner.core.api.solver.SolverFactory;
 import org.optaplanner.core.config.solver.SolverConfig;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
@@ -19,14 +21,13 @@ import java.util.List;
 @Service
 public class TimeTableService {
 
-    public TimeTable solve(TimeTable problem) {
-        SolverFactory<TimeTable> solverFactory = SolverFactory.create(new SolverConfig()
-                .withSolutionClass(TimeTable.class)
-                .withEntityClasses(Lesson.class)
-                .withConstraintProviderClass(TimeTableConstraintProvider.class)
-                .withTerminationSpentLimit(Duration.ofSeconds(5)));
+    private final Solver<TimeTable> solver;
 
-        Solver<TimeTable> solver = solverFactory.buildSolver();
+    public TimeTableService(@Qualifier("timeTableSolver") Solver<TimeTable> solver){
+        this.solver = solver;
+    }
+
+    public TimeTable solve(TimeTable problem) {
         return solver.solve(problem);
     }
 
