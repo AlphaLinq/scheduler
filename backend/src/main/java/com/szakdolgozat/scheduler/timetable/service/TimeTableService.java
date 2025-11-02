@@ -1,19 +1,15 @@
 package com.szakdolgozat.scheduler.timetable.service;
 
-import com.szakdolgozat.scheduler.cloudbalancing.domain.CloudBalance;
 import com.szakdolgozat.scheduler.timetable.domain.Lesson;
 import com.szakdolgozat.scheduler.timetable.domain.Room;
 import com.szakdolgozat.scheduler.timetable.domain.TimeSlot;
 import com.szakdolgozat.scheduler.timetable.domain.TimeTable;
-import com.szakdolgozat.scheduler.timetable.solver.TimeTableConstraintProvider;
 import org.optaplanner.core.api.solver.Solver;
 import org.optaplanner.core.api.solver.SolverFactory;
-import org.optaplanner.core.config.solver.SolverConfig;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
-import java.time.Duration;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,13 +17,14 @@ import java.util.List;
 @Service
 public class TimeTableService {
 
-    private final Solver<TimeTable> solver;
+    private final SolverFactory<TimeTable> solverFactory;
 
-    public TimeTableService(@Qualifier("timeTableSolver") Solver<TimeTable> solver){
-        this.solver = solver;
+    public TimeTableService(@Qualifier("timeTableSolverFactory") SolverFactory<TimeTable> solverFactory){
+        this.solverFactory = solverFactory;
     }
 
     public TimeTable solve(TimeTable problem) {
+        Solver<TimeTable> solver = solverFactory.buildSolver();
         return solver.solve(problem);
     }
 

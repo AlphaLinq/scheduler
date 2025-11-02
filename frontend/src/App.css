@@ -1,172 +1,154 @@
 .app-container {
-  width: 100%;
   max-width: 1400px;
   margin: 0 auto;
   padding: 20px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
 }
 
 h1 {
   text-align: center;
-  color: #2c3e50;
+  color: #333;
   margin-bottom: 30px;
-  width: 100%;
 }
 
 .controls {
-  text-align: center;
+  display: flex;
+  gap: 15px;
+  justify-content: center;
   margin-bottom: 30px;
 }
 
 .generate-btn {
-  background-color: #3498db;
+  padding: 12px 24px;
+  font-size: 16px;
+  background-color: #007bff;
   color: white;
   border: none;
-  padding: 12px 30px;
-  font-size: 16px;
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s;
 }
 
 .generate-btn:hover:not(:disabled) {
-  background-color: #2980b9;
+  background-color: #0056b3;
 }
 
 .generate-btn:disabled {
-  background-color: #95a5a6;
+  background-color: #6c757d;
   cursor: not-allowed;
 }
 
 .error {
-  background-color: #e74c3c;
-  color: white;
-  padding: 15px;
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 12px;
+  border: 1px solid #f5c6cb;
   border-radius: 5px;
   margin-bottom: 20px;
   text-align: center;
 }
 
+/* Timetable Styles */
 .timetable-container {
-  margin-top: 30px;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  margin-bottom: 40px;
 }
 
 .score-info {
   text-align: center;
-  background-color: #ecf0f1;
-  padding: 15px;
-  border-radius: 5px;
   margin-bottom: 20px;
-  width: 100%;
-  max-width: 600px;
+  padding: 15px;
+  background-color: #e7f3ff;
+  border-radius: 5px;
 }
 
 .score-info h3 {
   margin: 0;
-  color: #2c3e50;
+  color: #0056b3;
 }
 
 .table-wrapper {
   overflow-x: auto;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  border-radius: 8px;
+  margin-bottom: 20px;
 }
 
 .timetable {
   width: 100%;
   border-collapse: collapse;
   background-color: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.timetable th,
+.timetable td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: center;
 }
 
 .timetable th {
-  background-color: #34495e;
+  background-color: #007bff;
   color: white;
-  padding: 15px;
-  text-align: center;
-  font-weight: 600;
-  border: 1px solid #2c3e50;
-}
-
-.timetable td {
-  border: 1px solid #ddd;
-  padding: 10px;
-  min-width: 120px;
-  vertical-align: top;
+  font-weight: bold;
+  position: sticky;
+  top: 0;
 }
 
 .time-cell {
-  background-color: #ecf0f1;
-  font-weight: 600;
-  text-align: center;
+  background-color: #f8f9fa;
+  font-weight: bold;
   min-width: 100px;
 }
 
 .time-cell .day {
   font-size: 14px;
-  color: #7f8c8d;
-  margin-bottom: 5px;
+  color: #666;
 }
 
 .time-cell .time {
   font-size: 16px;
-  color: #2c3e50;
+  color: #333;
+  margin-top: 4px;
 }
 
 .lesson-cell {
+  vertical-align: top;
+  min-width: 150px;
   background-color: #fff;
-  transition: background-color 0.2s;
-}
-
-.lesson-cell:hover {
-  background-color: #f8f9fa;
 }
 
 .lesson {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background-color: #e7f3ff;
+  border: 1px solid #007bff;
+  border-radius: 4px;
   padding: 8px;
-  border-radius: 5px;
-  margin-bottom: 5px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.lesson:last-child {
-  margin-bottom: 0;
+  margin: 4px 0;
 }
 
 .lesson .subject {
-  font-weight: 700;
-  font-size: 14px;
+  font-weight: bold;
+  color: #0056b3;
   margin-bottom: 4px;
 }
 
 .lesson .teacher {
-  font-size: 12px;
-  opacity: 0.9;
-  margin-bottom: 2px;
+  font-size: 14px;
+  color: #666;
 }
 
 .lesson .student-group {
-  font-size: 11px;
-  opacity: 0.8;
-  font-style: italic;
+  font-size: 13px;
+  color: #999;
+  margin-top: 2px;
 }
 
 .unassigned-section {
-  margin-top: 30px;
-  padding: 20px;
+  margin-top: 20px;
+  padding: 15px;
   background-color: #fff3cd;
+  border: 1px solid #ffc107;
   border-radius: 5px;
-  border-left: 4px solid #ffc107;
-  width: 100%;
-  max-width: 800px;
 }
 
 .unassigned-section h3 {
@@ -175,36 +157,105 @@ h1 {
 }
 
 .unassigned-section ul {
-  list-style: none;
-  padding: 0;
+  margin: 10px 0;
+  padding-left: 20px;
 }
 
 .unassigned-section li {
-  padding: 8px;
-  margin-bottom: 5px;
-  background-color: white;
-  border-radius: 3px;
   color: #856404;
+  margin: 5px 0;
 }
 
+/* Cloud Balance Styles */
+.cloudbalance-container {
+  margin-top: 40px;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.cloudbalance-container h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.cloudbalance-section {
+  margin-bottom: 30px;
+}
+
+.cloudbalance-section h3 {
+  color: #0056b3;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #007bff;
+}
+
+.cloudbalance-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.cloudbalance-table th,
+.cloudbalance-table td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: left;
+}
+
+.cloudbalance-table th {
+  background-color: #28a745;
+  color: white;
+  font-weight: bold;
+  text-align: center;
+}
+
+.cloudbalance-table tbody tr:nth-child(even) {
+  background-color: #f8f9fa;
+}
+
+.cloudbalance-table tbody tr:hover {
+  background-color: #e7f3ff;
+}
+
+.cloudbalance-table tbody tr.unassigned {
+  background-color: #ffebee;
+}
+
+.cloudbalance-table tbody tr.unassigned:hover {
+  background-color: #ffcdd2;
+}
+
+.cloudbalance-table td:first-child {
+  font-weight: bold;
+  color: #0056b3;
+  text-align: center;
+}
+
+/* Responsive Design */
 @media (max-width: 768px) {
-  .app-container {
-    padding: 10px;
+  .controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .generate-btn {
+    width: 100%;
   }
 
   .timetable th,
   .timetable td {
     padding: 8px;
     font-size: 12px;
-    min-width: 80px;
   }
 
-  .lesson .subject {
+  .cloudbalance-table th,
+  .cloudbalance-table td {
+    padding: 8px;
     font-size: 12px;
   }
-
-  .lesson .teacher,
-  .lesson .student-group {
-    font-size: 10px;
-  }
 }
+
