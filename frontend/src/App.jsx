@@ -4,11 +4,12 @@ import './App.css'
 function App() {
   const [timetable, setTimetable] = useState(null)
   const [cloudbalance, setCloudBalanceTable] = useState(null)
-  const [loading, setLoading] = useState(false)
+  const [loadingTimetable, setLoadingTimetable] = useState(false)
+  const [loadingCloudBalance, setLoadingCloudBalance] = useState(false)
   const [error, setError] = useState(null)
 
   const generateTimetable = async () => {
-    setLoading(true)
+    setLoadingTimetable(true)
     setError(null)
     try {
       const response = await fetch('http://localhost:8080/api/timetable/demo')
@@ -20,7 +21,7 @@ function App() {
     } catch (err) {
       setError(err.message)
     } finally {
-      setLoading(false)
+      setLoadingTimetable(false)
     }
   }
 
@@ -74,7 +75,7 @@ function App() {
   const unassignedLessons = getUnassignedLessons()
 
     const generateCloudBalance = async () => {
-        setLoading(true)
+        setLoadingCloudBalance(true)
         setError(null)
         try {
             const response = await fetch("http://localhost:8080/api/cloudbalance/demo")
@@ -86,7 +87,7 @@ function App() {
         } catch (err) {
             setError(err.message)
         } finally {
-            setLoading(false)
+            setLoadingCloudBalance(false)
         }
     }
 
@@ -97,17 +98,17 @@ function App() {
       <div className="controls">
         <button
           onClick={generateTimetable}
-          disabled={loading}
+          disabled={loadingTimetable}
           className="generate-btn"
         >
-          {loading ? 'Generating...' : 'Generate Timetable'}
+          {loadingTimetable ? 'Generating...' : 'Generate Timetable'}
         </button>
           <button
               onClick={generateCloudBalance}
-              disabled={loading}
+              disabled={loadingCloudBalance}
               className="generate-btn"
           >
-              {loading ? 'Generating...' : 'Generate Cloud balancing task'}
+              {loadingCloudBalance ? 'Generating...' : 'Generate Cloud balancing task'}
           </button>
       </div>
 
@@ -177,35 +178,89 @@ function App() {
       )}
 
         {cloudbalance && (
-            <div style={{ marginTop: '40px', padding: '20px', border: '2px solid #333', background: '#f5f5f5' }}>
-                <h2>Cloud Balance RAW Data:</h2>
-                <pre style={{ background: '#fff', padding: '10px', overflow: 'auto' }}>
-      {JSON.stringify(cloudbalance, null, 2)}
-    </pre>
+            <div className="cloudbalance-container">
+                <h2>Cloud Balance Solution</h2>
 
-                <h3>Quick Access:</h3>
-                <ul>
-                    <li><strong>Computers:</strong> {cloudbalance.computerList?.length || 0} db</li>
-                    <li><strong>Processes:</strong> {cloudbalance.processList?.length || 0} db</li>
-                    <li><strong>Score:</strong> {cloudbalance.score?.hardScore || 'N/A'} hard / {cloudbalance.score?.softScore || 'N/A'} soft</li>
-                </ul>
+                <div className="score-info">
+                    <h3>Score: {cloudbalance.score?.hardScore || 0} hard / {cloudbalance.score?.softScore || 0} soft</h3>
+                </div>
 
-                <h4>Computers:</h4>
-                <ul>
-                    {cloudbalance.computerList?.map(c => (
-                        <li key={c.id}>ID: {c.id}, CPU: {c.cpuPower}, Mem: {c.memory}, Cost: {c.cost}</li>
-                    ))}
-                </ul>
+                <div className="cloudbalance-section">
+                    <h3>Computers ({cloudbalance.computerList?.length || 0})</h3>
+                    <div className="table-wrapper">
+                        <table className="cloudbalance-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>CPU Power</th>
+                                    <th>Memory</th>
+                                    <th>Cost</th>
+                                    <th>Assigned Processes</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {cloudbalance.computerList?.map(computer => {
+                                    const assignedProcesses = cloudbalance.processList?.filter(
+                                        p => p.computer?.id === computer.id
+                                    ) || []
+                                    return (
+                                        <tr key={computer.id}>
+                                            <td>{computer.id}</td>
+                                            <td>{computer.cpuPower}</td>
+                                            <td>{computer.memory}</td>
+                                            <td>{computer.cost}</td>
+                                            <td>
+                                                {assignedProcesses.length > 0 ? (
+                                                    <ul style={{ margin: 0, paddingLeft: '20px' }}>
+                                                        {assignedProcesses.map(p => (
+                                                            <li key={p.id}>
+                                                                Process {p.id} (CPU: {p.requiredCpuPower}, Mem: {p.requiredMemory})
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                ) : (
+                                                    <span style={{ color: '#999' }}>No processes</span>
+                                                )}
+                                            </td>
+                                        </tr>
+                                    )
+                                })}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
 
-                <h4>Processes:</h4>
-                <ul>
-                    {cloudbalance.processList?.map(p => (
-                        <li key={p.id}>
-                            ID: {p.id}, CPU: {p.requiredCpuPower}, Mem: {p.requiredMemory},
-                            Computer: {p.computer?.id || 'NOT ASSIGNED'}
-                        </li>
-                    ))}
-                </ul>
+                <div className="cloudbalance-section">
+                    <h3>Processes ({cloudbalance.processList?.length || 0})</h3>
+                    <div className="table-wrapper">
+                        <table className="cloudbalance-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Required CPU</th>
+                                    <th>Required Memory</th>
+                                    <th>Assigned Computer</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {cloudbalance.processList?.map(process => (
+                                    <tr key={process.id} className={!process.computer ? 'unassigned' : ''}>
+                                        <td>{process.id}</td>
+                                        <td>{process.requiredCpuPower}</td>
+                                        <td>{process.requiredMemory}</td>
+                                        <td>
+                                            {process.computer ? (
+                                                <span>Computer {process.computer.id}</span>
+                                            ) : (
+                                                <span style={{ color: 'red', fontWeight: 'bold' }}>NOT ASSIGNED</span>
+                                            )}
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         )}
 
