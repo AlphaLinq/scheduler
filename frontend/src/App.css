@@ -54,6 +54,15 @@ h1 {
 .timetable-container {
   margin-bottom: 40px;
 }
+.section-header {
+    margin-bottom: 20px;
+}
+
+.description {
+    color: #666;
+    font-size: 14px;
+    margin-top: 5px;
+}
 
 .score-info {
   text-align: center;

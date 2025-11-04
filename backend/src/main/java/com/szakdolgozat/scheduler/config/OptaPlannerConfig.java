@@ -32,7 +32,7 @@ public class OptaPlannerConfig {
                 .withSolutionClass(CloudBalance.class)
                 .withEntityClasses(CloudProcess.class)
                 .withConstraintProviderClass(CloudBalancingConstraintProvider.class)
-                .withTerminationSpentLimit(Duration.ofSeconds(5));
+                .withTerminationSpentLimit(Duration.ofSeconds(20));
 
         return SolverFactory.<CloudBalance>create(config);
     }

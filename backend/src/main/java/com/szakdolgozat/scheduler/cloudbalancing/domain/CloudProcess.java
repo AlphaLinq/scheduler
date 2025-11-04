@@ -17,6 +17,7 @@ public class CloudProcess {
     private int requiredMemory;
     private int requiredBandwidth;
 
+    @PlanningVariable(valueRangeProviderRefs = "computerList")
     @Setter
     private Computer computer;
 
@@ -31,7 +32,6 @@ public class CloudProcess {
         this.computer = computer;
     }
 
-    @PlanningVariable
     public Computer getComputer() {
         return computer;
     }

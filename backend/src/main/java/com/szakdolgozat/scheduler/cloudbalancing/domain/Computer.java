@@ -6,7 +6,8 @@ import org.optaplanner.core.api.domain.lookup.PlanningId;
 @Getter
 public class Computer {
 
-
+    @PlanningId
+    private int id;
     private int cpuPower;
     private int memory;
     private int networkBandwidth;
@@ -15,7 +16,8 @@ public class Computer {
     public Computer() {
     }
 
-    public Computer(int cpuPower, int memory, int networkBandwidth, int cost) {
+    public Computer(int id, int cpuPower, int memory, int networkBandwidth, int cost) {
+        this.id = id;
         this.cpuPower = cpuPower;
         this.memory = memory;
         this.networkBandwidth = networkBandwidth;

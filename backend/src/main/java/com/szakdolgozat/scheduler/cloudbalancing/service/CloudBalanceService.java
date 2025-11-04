@@ -27,19 +27,20 @@ public class CloudBalanceService {
 
     public CloudBalance generateDemoData() {
         List<Computer> computerList = new ArrayList<>();
-        computerList.add(new Computer(1, 2, 4, 100));
-        computerList.add(new Computer(2, 2, 6, 120));
-        computerList.add(new Computer(3, 4, 8, 180));
-        computerList.add(new Computer(4, 4, 12, 200));
+        int idc = 0;
+        computerList.add(new Computer(idc++,4, 8, 10, 100));
+        computerList.add(new Computer(idc++,8, 16, 20, 200));
+        computerList.add(new Computer(idc++,12, 24, 30, 300));
+        computerList.add(new Computer(idc++,16, 32, 40, 500));
 
         List<CloudProcess> processList = new ArrayList<>();
         long id = 0;
-        processList.add(new CloudProcess(id++,1, 1, 1, null));
-        processList.add(new CloudProcess(id++,2, 2, 2, null));
-        processList.add(new CloudProcess(id++,3, 1, 3, null));
-        processList.add(new CloudProcess(id++,4, 2, 1, null));
-        processList.add(new CloudProcess(id++,5, 1, 2, null));
-        processList.add(new CloudProcess(id++,6, 3, 3, null));
+        processList.add(new CloudProcess(id++,1, 2, 2, null));
+        processList.add(new CloudProcess(id++,2, 4, 3, null));
+        processList.add(new CloudProcess(id++,1, 3, 2, null));
+        processList.add(new CloudProcess(id++,3, 5, 4, null));
+        processList.add(new CloudProcess(id++,2, 3, 3, null));
+        processList.add(new CloudProcess(id++,4, 6, 5, null));
 
         return new CloudBalance(processList, computerList);
     }

@@ -179,8 +179,36 @@ function App() {
 
         {cloudbalance && (
             <div className="cloudbalance-container">
-                <h2>Cloud Balance Solution</h2>
+                <div className="section-header">
+                    <h2>Cloud Balance Solution</h2>
+                    <p className="descrtiption">
+                        Suppose your company owns a number of cloud computers and needs to run a number of processes on those computers. Assign each process to a computer.
+                        <br/>
+                        The following hard constraints must be fulfilled:
+                        <ul>
+                            <li> Every computer must be able to handle the minimum hardware requirements of the sum of its processes:</li>
+                            <ul>
+                                <li>CPU capacity: The CPU power of a computer must be at least the sum of the CPU power required by the processes assigned to that computer.</li>
+                                <li>Memory capacity: The RAM memory of a computer must be at least the sum of the RAM memory required by the processes assigned to that computer.</li>
+                                <li>Network capacity: The network bandwidth of a computer must be at least the sum of the network bandwidth required by the processes assigned to that computer.</li>
+                            </ul>
+                        </ul>
 
+                        The following soft constraints should be optimized:
+                        <ul>
+                            <li>Each computer that has one or more processes assigned, incurs a maintenance cost (which is fixed per computer).</li>
+                            <ul>
+                                <li>Cost: Minimize the total maintenance cost.</li>
+                            </ul>
+                        </ul>
+                        This problem is a form of bin packing. The following is a simplified example:
+                        <br/>
+                        OptaPlanner assigned {cloudbalance.processList?.length || 0} processes
+                        to {cloudbalance.computerList?.filter(c =>
+                        cloudbalance.processList?.some(p => p.computer?.id === c.id)
+                    ).length || 0} computers
+                    </p>
+                </div>
                 <div className="score-info">
                     <h3>Score: {cloudbalance.score?.hardScore || 0} hard / {cloudbalance.score?.softScore || 0} soft</h3>
                 </div>
