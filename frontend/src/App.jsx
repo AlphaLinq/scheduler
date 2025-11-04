@@ -116,6 +116,28 @@ function App() {
 
       {timetable && (
         <div className="timetable-container">
+            <div className="section-header">
+                <h2>Time Table Solution</h2>
+                <p className="descrtiption">
+                    Your application will assign Lesson instances to Timeslot and Room instances automatically by using AI to adhere to hard and soft scheduling constraints, for example:
+                    <ul>
+                        <li>A room can have at most one lesson at the same time.</li>
+                        <li>A teacher can teach at most one lesson at the same time.</li>
+                        <li>A student can attend at most one lesson at the same time.</li>
+                        <li>A teacher prefers to teach all lessons in the same room.</li>
+                        <li>A teacher prefers to teach sequential lessons and dislikes gaps between lessons.</li>
+                        <li>A student dislikes sequential lessons on the same subject.</li>
+                    </ul>
+                    <br/>
+                    Mathematically speaking, school timetabling is an NP-hard problem. This means it is difficult to scale. Simply brute force iterating through all possible combinations takes millions of years for a non-trivial dataset, even on a supercomputer. Fortunately, AI constraint solvers such as OptaPlanner have advanced algorithms that deliver a near-optimal solution in a reasonable amount of time.
+                    <br/> <br/>
+                    Score meanings:
+                        <ul>
+                            <li><b>Hard constraints</b> must not be broken. For example: A room can have at most one lesson at the same time.</li>
+                            <li><b>Soft constraints</b> should not be broken. For example: A teacher prefers to teach in a single room.</li>
+                        </ul>
+                </p>
+            </div>
           <div className="score-info">
             <h3>Score: {timetable.score?.hardScore || 0} hard / {timetable.score?.softScore || 0} soft</h3>
           </div>
