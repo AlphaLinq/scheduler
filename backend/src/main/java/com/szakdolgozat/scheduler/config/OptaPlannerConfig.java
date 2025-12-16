@@ -5,6 +5,9 @@ import com.szakdolgozat.scheduler.cloudbalancing.solver.CloudBalancingConstraint
 import com.szakdolgozat.scheduler.timetable.domain.Lesson;
 import com.szakdolgozat.scheduler.timetable.domain.TimeTable;
 import com.szakdolgozat.scheduler.timetable.solver.TimeTableConstraintProvider;
+import com.szakdolgozat.scheduler.vehiclerouting.domain.Customer;
+import com.szakdolgozat.scheduler.vehiclerouting.domain.VehicleRoutingSolution;
+import com.szakdolgozat.scheduler.vehiclerouting.solver.VehicleRoutingConstraintProvider;
 import org.optaplanner.core.api.solver.SolverFactory;
 import org.optaplanner.core.config.solver.SolverConfig;
 import org.springframework.context.annotation.Bean;
@@ -35,5 +38,16 @@ public class OptaPlannerConfig {
                 .withTerminationSpentLimit(Duration.ofSeconds(20));
 
         return SolverFactory.<CloudBalance>create(config);
+    }
+
+    @Bean(name = "vehicleRoutingSolverFactory")
+    public SolverFactory<VehicleRoutingSolution> vehicleRoutingSolverFactory() {
+        SolverConfig config = new SolverConfig()
+                .withSolutionClass(VehicleRoutingSolution.class)
+                .withEntityClasses(Customer.class)
+                .withConstraintProviderClass(VehicleRoutingConstraintProvider.class)
+                .withTerminationSpentLimit(Duration.ofSeconds(30));
+
+        return SolverFactory.<VehicleRoutingSolution>create(config);
     }
 }

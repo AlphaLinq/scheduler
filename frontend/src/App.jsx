@@ -4,8 +4,10 @@ import './App.css'
 function App() {
   const [timetable, setTimetable] = useState(null)
   const [cloudbalance, setCloudBalanceTable] = useState(null)
+  const [vehiclerouting, setVehicleRouting] = useState(null)
   const [loadingTimetable, setLoadingTimetable] = useState(false)
   const [loadingCloudBalance, setLoadingCloudBalance] = useState(false)
+  const [loadingVehicleRouting, setLoadingVehicleRouting] = useState(false)
   const [error, setError] = useState(null)
 
   const generateTimetable = async () => {
@@ -91,6 +93,22 @@ function App() {
         }
     }
 
+    const generateVehicleRouting = async () => {
+        setLoadingVehicleRouting(true)
+        setError(null)
+        try {
+            const response = await fetch("http://localhost:8080/api/vehiclerouting/demo")
+            if (!response.ok){
+                throw new Error('Failed to generate Vehicle Routing solution')
+            }
+            const data = await response.json()
+            setVehicleRouting(data)
+        } catch (err) {
+            setError(err.message)
+        } finally {
+            setLoadingVehicleRouting(false)
+        }
+    }
   return (
     <div className="app-container">
       <h1>Scheduler</h1>
@@ -109,6 +127,13 @@ function App() {
               className="generate-btn"
           >
               {loadingCloudBalance ? 'Generating...' : 'Generate Cloud balancing task'}
+          </button>
+          <button
+              onClick={generateVehicleRouting}
+              disabled={loadingVehicleRouting}
+              className="generate-btn"
+          >
+              {loadingVehicleRouting ? 'Generating...' : 'Generate Vehicle Routing'}
           </button>
       </div>
 
@@ -301,6 +326,140 @@ function App() {
                                         <td>
                                             {process.computer ? (
                                                 <span>Computer {process.computer.id}</span>
+                                            ) : (
+                                                <span style={{ color: 'red', fontWeight: 'bold' }}>NOT ASSIGNED</span>
+                                            )}
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        )}
+
+        {vehiclerouting && (
+            <div className="vehiclerouting-container">
+                <div className="section-header">
+                    <h2>Vehicle Routing Solution (CVRPTW)</h2>
+                    <p className="descrtiption">
+                        The Capacitated Vehicle Routing Problem with Time Windows (CVRPTW) is a classic optimization problem
+                        where vehicles must visit a set of customers, starting and ending at a depot.
+                        The goal is to find the optimal routes for a fleet of vehicles to serve all customers.
+                        <br/><br/>
+                        The following <b>hard constraints</b> must be fulfilled:
+                        <ul>
+                            <li><b>Vehicle capacity:</b> A vehicle cannot carry more items than its capacity.</li>
+                            <li><b>Customer ready time:</b> A vehicle may arrive before the customer's ready time, but it must wait until the ready time before servicing.</li>
+                            <li><b>Customer due time:</b> A vehicle must arrive on time, before the customer's due time.</li>
+                            <li><b>Service duration:</b> A vehicle must stay at the customer for the length of the service duration.</li>
+                            <li><b>Travel time:</b> Traveling from one location to another takes time.</li>
+                        </ul>
+
+                        The following <b>soft constraints</b> should be optimized:
+                        <ul>
+                            <li><b>Total distance:</b> Minimize the total distance driven (fuel consumption) of all vehicles.</li>
+                        </ul>
+                        <br/>
+                        OptaPlanner assigned {vehiclerouting.customerList?.length || 0} customers
+                        to {vehiclerouting.vehicleList?.filter(v =>
+                            vehiclerouting.customerList?.some(c => c.vehicle?.id === v.id)
+                        ).length || 0} vehicles
+                    </p>
+                </div>
+                <div className="score-info">
+                    <h3>Score: {vehiclerouting.score?.hardScore || 0} hard / {vehiclerouting.score?.softScore || 0} soft</h3>
+                </div>
+
+                <div className="cloudbalance-section">
+                    <h3>Vehicles ({vehiclerouting.vehicleList?.length || 0})</h3>
+                    <div className="table-wrapper">
+                        <table className="cloudbalance-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Capacity</th>
+                                    <th>Depot</th>
+                                    <th>Assigned Customers</th>
+                                    <th>Total Demand</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {vehiclerouting.vehicleList?.map(vehicle => {
+                                    const assignedCustomers = vehiclerouting.customerList?.filter(
+                                        c => c.vehicle?.id === vehicle.id
+                                    ) || []
+                                    const totalDemand = assignedCustomers.reduce((sum, c) => sum + c.demand, 0)
+                                    return (
+                                        <tr key={vehicle.id}>
+                                            <td>{vehicle.id}</td>
+                                            <td>{vehicle.name}</td>
+                                            <td>{vehicle.capacity}</td>
+                                            <td>{vehicle.depot.name}</td>
+                                            <td>
+                                                {assignedCustomers.length > 0 ? (
+                                                    <ul style={{ margin: 0, paddingLeft: '20px' }}>
+                                                        {assignedCustomers.map(c => (
+                                                            <li key={c.id}>
+                                                                {c.name} (Demand: {c.demand})
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                ) : (
+                                                    <span style={{ color: '#999' }}>No customers</span>
+                                                )}
+                                            </td>
+                                            <td style={{
+                                                fontWeight: 'bold',
+                                                color: totalDemand > vehicle.capacity ? 'red' : 'green'
+                                            }}>
+                                                {totalDemand} / {vehicle.capacity}
+                                            </td>
+                                        </tr>
+                                    )
+                                })}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div className="cloudbalance-section">
+                    <h3>Customers ({vehiclerouting.customerList?.length || 0})</h3>
+                    <div className="table-wrapper">
+                        <table className="cloudbalance-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Location</th>
+                                    <th>Demand</th>
+                                    <th>Service Duration</th>
+                                    <th>Ready Time</th>
+                                    <th>Due Time</th>
+                                    <th>Assigned Vehicle</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {vehiclerouting.customerList?.map(customer => (
+                                    <tr key={customer.id} className={!customer.vehicle ? 'unassigned' : ''}>
+                                        <td>{customer.id}</td>
+                                        <td>{customer.name}</td>
+                                        <td>
+                                            {customer.location.name}
+                                            <br/>
+                                            <small style={{ color: '#666' }}>
+                                                ({customer.location.latitude.toFixed(4)}, {customer.location.longitude.toFixed(4)})
+                                            </small>
+                                        </td>
+                                        <td>{customer.demand}</td>
+                                        <td>{customer.serviceDuration} min</td>
+                                        <td>{customer.readyTime !== null ? `${customer.readyTime} min` : 'N/A'}</td>
+                                        <td>{customer.dueTime !== null ? `${customer.dueTime} min` : 'N/A'}</td>
+                                        <td>
+                                            {customer.vehicle ? (
+                                                <span>{customer.vehicle.name}</span>
                                             ) : (
                                                 <span style={{ color: 'red', fontWeight: 'bold' }}>NOT ASSIGNED</span>
                                             )}
