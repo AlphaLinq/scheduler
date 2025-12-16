@@ -1,6 +1,7 @@
 package com.szakdolgozat.scheduler.timetable.domain;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.optaplanner.core.api.domain.solution.PlanningEntityCollectionProperty;
 import org.optaplanner.core.api.domain.solution.PlanningScore;
 import org.optaplanner.core.api.domain.solution.PlanningSolution;
@@ -38,6 +39,7 @@ public class TimeTable {
     private List<Lesson> lessonList;
 
     @Getter
+    @Setter
     @PlanningScore
     private HardSoftScore score;
     //pl: 0hard/-5soft

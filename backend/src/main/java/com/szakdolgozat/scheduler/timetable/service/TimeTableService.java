@@ -1,18 +1,15 @@
 package com.szakdolgozat.scheduler.timetable.service;
 
-import com.szakdolgozat.scheduler.timetable.domain.Lesson;
-import com.szakdolgozat.scheduler.timetable.domain.Room;
-import com.szakdolgozat.scheduler.timetable.domain.TimeSlot;
-import com.szakdolgozat.scheduler.timetable.domain.TimeTable;
+import com.szakdolgozat.scheduler.timetable.domain.*;
 import org.optaplanner.core.api.solver.Solver;
 import org.optaplanner.core.api.solver.SolverFactory;
+import org.optaplanner.core.api.solver.event.BestSolutionChangedEvent;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class TimeTableService {
@@ -26,6 +23,68 @@ public class TimeTableService {
     public TimeTable solve(TimeTable problem) {
         Solver<TimeTable> solver = solverFactory.buildSolver();
         return solver.solve(problem);
+    }
+
+    public TimeTableSolutionWithIterations solveWithIterations(TimeTable problem) {
+        Solver<TimeTable> solver = solverFactory.buildSolver();
+        List<TimeTableIteration> iterations = new ArrayList<>();
+
+        // Listener for best solution changes
+        solver.addEventListener(event -> {
+            if (event instanceof BestSolutionChangedEvent) {
+                BestSolutionChangedEvent bestEvent = (BestSolutionChangedEvent) event;
+                TimeTable solution = (TimeTable) bestEvent.getNewBestSolution();
+
+                // Deep copy the solution to preserve it at this iteration
+                TimeTable solutionCopy = deepCopyTimeTable(solution);
+
+                // Determine phase name from solver state
+                String phaseName = "Unknown Phase";
+                try {
+                    // Get the current phase name from the solver state
+                    phaseName = "Solving Phase";
+                } catch (Exception e) {
+                    // Fallback
+                }
+
+                TimeTableIteration iteration = new TimeTableIteration(
+                    0,  // step count - we'll use 0 since it's not directly available
+                    bestEvent.getTimeMillisSpent(),
+                    solution.getScore(),
+                    solutionCopy,
+                    phaseName
+                );
+                iterations.add(iteration);
+            }
+        });
+
+        TimeTable finalSolution = solver.solve(problem);
+        return new TimeTableSolutionWithIterations(finalSolution, iterations);
+    }
+
+    private TimeTable deepCopyTimeTable(TimeTable original) {
+        // Create a new TimeTable with copies of the lists
+        TimeTable copy = new TimeTable(
+            new ArrayList<>(original.getTimeSlotList()),
+            new ArrayList<>(original.getRoomList()),
+            new ArrayList<>()
+        );
+
+        // Deep copy the lessons to preserve their state
+        for (Lesson lesson : original.getLessonList()) {
+            Lesson lessonCopy = new Lesson(
+                lesson.getId(),
+                lesson.getSubject(),
+                lesson.getTeacher(),
+                lesson.getStudentGroup()
+            );
+            lessonCopy.setTimeSlot(lesson.getTimeSlot());
+            lessonCopy.setRoom(lesson.getRoom());
+            copy.getLessonList().add(lessonCopy);
+        }
+
+        copy.setScore(original.getScore());
+        return copy;
     }
 
     public TimeTable generateDemoData() {

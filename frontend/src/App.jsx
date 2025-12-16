@@ -3,6 +3,8 @@ import './App.css'
 
 function App() {
   const [timetable, setTimetable] = useState(null)
+  const [timetableIterations, setTimetableIterations] = useState([])
+  const [currentIterationIndex, setCurrentIterationIndex] = useState(null)
   const [cloudbalance, setCloudBalanceTable] = useState(null)
   const [vehiclerouting, setVehicleRouting] = useState(null)
   const [loadingTimetable, setLoadingTimetable] = useState(false)
@@ -14,12 +16,14 @@ function App() {
     setLoadingTimetable(true)
     setError(null)
     try {
-      const response = await fetch('http://localhost:8080/api/timetable/demo')
+      const response = await fetch('http://localhost:8080/api/timetable/demo/iterations')
       if (!response.ok) {
         throw new Error('Failed to generate timetable')
       }
       const data = await response.json()
-      setTimetable(data)
+      setTimetable(data.finalSolution)
+      setTimetableIterations(data.iterations)
+      setCurrentIterationIndex(data.iterations.length - 1)
     } catch (err) {
       setError(err.message)
     } finally {
@@ -27,25 +31,32 @@ function App() {
     }
   }
 
-
-  /*
-    Backend adja:
-    lessonList = [
-      { subject: "Math", timeSlot: "MONDAY-09:00", room: "A101" },
-      { subject: "English", timeSlot: "MONDAY-09:00", room: "A102" }
-    ]
-
-    Eredmény:
-    {
-      "MONDAY-09:00": {
-        timeSlot: { dayOfWeek: "MONDAY", startTime: "09:00" },
-        rooms: {
-          "A101": [{ subject: "Math", ... }],
-          "A102": [{ subject: "English", ... }]
-        }
-      }
+  const goToIteration = (index) => {
+    if (index >= 0 && index < timetableIterations.length) {
+      setCurrentIterationIndex(index)
+      setTimetable(timetableIterations[index].solution)
     }
-   */
+  }
+
+  const nextIteration = () => {
+    if (currentIterationIndex !== null && currentIterationIndex < timetableIterations.length - 1) {
+      goToIteration(currentIterationIndex + 1)
+    }
+  }
+
+  const prevIteration = () => {
+    if (currentIterationIndex !== null && currentIterationIndex > 0) {
+      goToIteration(currentIterationIndex - 1)
+    }
+  }
+
+  const showFinalSolution = () => {
+    if (timetableIterations.length > 0) {
+      goToIteration(timetableIterations.length - 1)
+    }
+  }
+
+
   const groupLessonsByTimeSlotAndRoom = () => {
     if (!timetable) return {}
     
@@ -166,6 +177,51 @@ function App() {
           <div className="score-info">
             <h3>Score: {timetable.score?.hardScore || 0} hard / {timetable.score?.softScore || 0} soft</h3>
           </div>
+
+          {timetableIterations.length > 0 && (
+            <div className="iteration-controls">
+              <div className="iteration-info">
+                <p>Iteration: {currentIterationIndex !== null ? currentIterationIndex + 1 : 0} / {timetableIterations.length}</p>
+                {currentIterationIndex !== null && timetableIterations[currentIterationIndex] && (
+                  <div className="iteration-details">
+                    <p>Phase: {timetableIterations[currentIterationIndex].phaseName}</p>
+                    <p>Steps: {timetableIterations[currentIterationIndex].stepCount}</p>
+                    <p>Time: {timetableIterations[currentIterationIndex].timeMillis}ms</p>
+                  </div>
+                )}
+              </div>
+              <div className="iteration-buttons">
+                <button
+                  onClick={prevIteration}
+                  disabled={currentIterationIndex === null || currentIterationIndex === 0}
+                  className="nav-btn"
+                >
+                  ← Previous
+                </button>
+                <input
+                  type="range"
+                  min="0"
+                  max={timetableIterations.length - 1}
+                  value={currentIterationIndex !== null ? currentIterationIndex : 0}
+                  onChange={(e) => goToIteration(parseInt(e.target.value))}
+                  className="iteration-slider"
+                />
+                <button
+                  onClick={nextIteration}
+                  disabled={currentIterationIndex === null || currentIterationIndex === timetableIterations.length - 1}
+                  className="nav-btn"
+                >
+                  Next →
+                </button>
+                <button
+                  onClick={showFinalSolution}
+                  className="nav-btn final-btn"
+                >
+                  Final Solution
+                </button>
+              </div>
+            </div>
+          )}
 
           <div className="table-wrapper">
             <table className="timetable">

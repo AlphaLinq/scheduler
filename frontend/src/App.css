@@ -244,6 +244,122 @@ h1 {
   text-align: center;
 }
 
+/* Iteration Controls */
+.iteration-controls {
+  background-color: #f0f4f8;
+  border: 2px solid #007bff;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 20px 0;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.iteration-info {
+  flex: 1;
+  min-width: 200px;
+}
+
+.iteration-info p {
+  margin: 5px 0;
+  font-weight: bold;
+  color: #333;
+}
+
+.iteration-details {
+  margin-top: 10px;
+  padding: 10px;
+  background-color: white;
+  border-radius: 4px;
+  border-left: 4px solid #007bff;
+}
+
+.iteration-details p {
+  margin: 5px 0;
+  font-size: 14px;
+  color: #666;
+}
+
+.iteration-buttons {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.nav-btn {
+  padding: 10px 16px;
+  font-size: 14px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+  white-space: nowrap;
+}
+
+.nav-btn:hover:not(:disabled) {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+.nav-btn:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.nav-btn.final-btn {
+  background-color: #28a745;
+}
+
+.nav-btn.final-btn:hover:not(:disabled) {
+  background-color: #218838;
+}
+
+.iteration-slider {
+  flex: 1;
+  min-width: 150px;
+  height: 6px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: #ddd;
+  outline: none;
+  border-radius: 5px;
+}
+
+.iteration-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background: #007bff;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: background-color 0.3s;
+}
+
+.iteration-slider::-webkit-slider-thumb:hover {
+  background: #0056b3;
+}
+
+.iteration-slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  background: #007bff;
+  cursor: pointer;
+  border-radius: 50%;
+  border: none;
+  transition: background-color 0.3s;
+}
+
+.iteration-slider::-moz-range-thumb:hover {
+  background: #0056b3;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .controls {
