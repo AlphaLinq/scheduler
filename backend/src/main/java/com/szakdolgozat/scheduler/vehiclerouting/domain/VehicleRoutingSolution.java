@@ -1,6 +1,8 @@
 package com.szakdolgozat.scheduler.vehiclerouting.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import org.optaplanner.core.api.domain.solution.PlanningEntityCollectionProperty;
 import org.optaplanner.core.api.domain.solution.PlanningScore;
@@ -17,13 +19,19 @@ public class VehicleRoutingSolution {
 
     @JsonProperty("customerList")
     @PlanningEntityCollectionProperty
+    @NotEmpty
+    @Valid
     private List<Customer> customerList;
 
     @ValueRangeProvider(id = "vehicleRange")
     @ProblemFactCollectionProperty
+    @NotEmpty
+    @Valid
     private List<Vehicle> vehicleList;
 
     @ProblemFactCollectionProperty
+    @NotEmpty
+    @Valid
     private List<Location> locationList;
 
     @PlanningScore

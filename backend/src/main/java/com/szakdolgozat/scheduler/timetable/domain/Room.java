@@ -1,7 +1,10 @@
 package com.szakdolgozat.scheduler.timetable.domain;
 
+import jakarta.validation.constraints.NotBlank;
+
 public class Room {
 
+    @NotBlank
     private String roomName;
 
     public Room() {

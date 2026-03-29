@@ -8,8 +8,11 @@ import com.szakdolgozat.scheduler.timetable.solver.TimeTableConstraintProvider;
 import com.szakdolgozat.scheduler.vehiclerouting.domain.Customer;
 import com.szakdolgozat.scheduler.vehiclerouting.domain.VehicleRoutingSolution;
 import com.szakdolgozat.scheduler.vehiclerouting.solver.VehicleRoutingConstraintProvider;
+import org.optaplanner.core.api.score.ScoreManager;
+import org.optaplanner.core.api.score.buildin.hardsoft.HardSoftScore;
 import org.optaplanner.core.api.solver.SolverFactory;
 import org.optaplanner.core.config.solver.SolverConfig;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -49,5 +52,23 @@ public class OptaPlannerConfig {
                 .withTerminationSpentLimit(Duration.ofSeconds(30));
 
         return SolverFactory.<VehicleRoutingSolution>create(config);
+    }
+
+    @Bean(name = "timeTableScoreManager")
+    public ScoreManager<TimeTable, HardSoftScore> timeTableScoreManager(
+            @Qualifier("timeTableSolverFactory") SolverFactory<TimeTable> solverFactory) {
+        return ScoreManager.create(solverFactory);
+    }
+
+    @Bean(name = "cloudBalanceScoreManager")
+    public ScoreManager<CloudBalance, HardSoftScore> cloudBalanceScoreManager(
+            @Qualifier("cloudBalanceSolverFactory") SolverFactory<CloudBalance> solverFactory) {
+        return ScoreManager.create(solverFactory);
+    }
+
+    @Bean(name = "vehicleRoutingScoreManager")
+    public ScoreManager<VehicleRoutingSolution, HardSoftScore> vehicleRoutingScoreManager(
+            @Qualifier("vehicleRoutingSolverFactory") SolverFactory<VehicleRoutingSolution> solverFactory) {
+        return ScoreManager.create(solverFactory);
     }
 }
