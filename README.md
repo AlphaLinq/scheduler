@@ -69,22 +69,6 @@ GET http://localhost:8080/api/timetable/demo
 ```
 Generál és megold egy demo órarend problémát.
 
-
-##  Projekt Struktúra
-
-```
-scheduler/
-├── backend/                          # Spring Boot alkalmazás
-│   └── src/main/java/.../scheduler/
-│       ├── config/                   # OptaPlanner konfiguráció
-│       ├── cloudbalancing/           # Cloud Balance modul
-│       ├── timetable/                # Timetable modul
-│       └── vehiclerouting/           # Vehicle Routing modul
-└── frontend/                         # React alkalmazás
-    └── src/
-        └── App.jsx                   # Fő komponens
-```
-
 ##  OptaPlanner Koncepciók
 
 ### Planning Solution
@@ -147,9 +131,9 @@ public SolverFactory<CloudBalance> cloudBalanceSolverFactory() {
 ##  Score Példák
 
 ```
-0hard/-300soft     ✅ Feasible megoldás, 300 soft cost
--2hard/-200soft    ❌ Infeasible megoldás (2 hard constraint sérül)
-0hard/0soft        🏆 Tökéletes megoldás
+0hard/-300soft     Feasible megoldás, 300 soft cost
+-2hard/-200soft    Infeasible megoldás (2 hard constraint sérül)
+0hard/0soft        Tökéletes megoldás
 ```
 
 ##  Megjegyzések a Frontendhez

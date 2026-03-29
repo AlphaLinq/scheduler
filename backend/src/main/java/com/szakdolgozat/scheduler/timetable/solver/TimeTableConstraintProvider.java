@@ -12,9 +12,14 @@ public class TimeTableConstraintProvider implements ConstraintProvider {
     @Override
     public Constraint[] defineConstraints(ConstraintFactory constraintFactory) {
         return new Constraint[] {
+                // Hard constraints
                 roomConflict(constraintFactory),
                 teacherConflict(constraintFactory),
-                studentGroupConflict(constraintFactory)
+                studentGroupConflict(constraintFactory),
+                // Soft constraints
+                teacherRoomStability(constraintFactory),
+                teacherTimeEfficiency(constraintFactory),
+                studentGroupTimeEfficiency(constraintFactory)
         };
     }
 
@@ -52,5 +57,51 @@ public class TimeTableConstraintProvider implements ConstraintProvider {
                         Joiners.lessThan(Lesson::getId))
                 .penalize(HardSoftScore.ONE_HARD)
                 .asConstraint("Student group conflict");
+    }
+
+    // Soft constraint: A teacher prefers to teach in a single room as much as possible.
+    private Constraint teacherRoomStability(ConstraintFactory constraintFactory) {
+        return constraintFactory
+                .forEach(Lesson.class)
+                .join(Lesson.class,
+                        Joiners.equal(Lesson::getTeacher),
+                        Joiners.lessThan(Lesson::getId))
+                .filter((lesson1, lesson2) -> lesson1.getRoom() != lesson2.getRoom())
+                .penalize(HardSoftScore.ONE_SOFT)
+                .asConstraint("Teacher room stability");
+    }
+
+    // Soft constraint: A teacher prefers to have consecutive lessons (no gaps).
+    private Constraint teacherTimeEfficiency(ConstraintFactory constraintFactory) {
+        return constraintFactory
+                .forEach(Lesson.class)
+                .join(Lesson.class,
+                        Joiners.equal(Lesson::getTeacher),
+                        Joiners.equal((lesson) -> lesson.getTimeSlot().getDayOfWeek()))
+                .filter((lesson1, lesson2) -> {
+                    long minutesBetween = java.time.Duration.between(
+                            lesson1.getTimeSlot().getEndTime(),
+                            lesson2.getTimeSlot().getStartTime()).toMinutes();
+                    return minutesBetween > 0 && minutesBetween <= 30; // 30 minutes threshold for consecutive
+                })
+                .reward(HardSoftScore.ONE_SOFT)
+                .asConstraint("Teacher time efficiency");
+    }
+
+    // Soft constraint: A student group prefers to have consecutive lessons (no gaps).
+    private Constraint studentGroupTimeEfficiency(ConstraintFactory constraintFactory) {
+        return constraintFactory
+                .forEach(Lesson.class)
+                .join(Lesson.class,
+                        Joiners.equal(Lesson::getStudentGroup),
+                        Joiners.equal((lesson) -> lesson.getTimeSlot().getDayOfWeek()))
+                .filter((lesson1, lesson2) -> {
+                    long minutesBetween = java.time.Duration.between(
+                            lesson1.getTimeSlot().getEndTime(),
+                            lesson2.getTimeSlot().getStartTime()).toMinutes();
+                    return minutesBetween > 0 && minutesBetween <= 30; // 30 minutes threshold for consecutive
+                })
+                .reward(HardSoftScore.ONE_SOFT)
+                .asConstraint("Student group time efficiency");
     }
 }

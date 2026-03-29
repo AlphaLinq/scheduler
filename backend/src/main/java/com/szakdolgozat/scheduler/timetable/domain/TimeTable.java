@@ -1,5 +1,7 @@
 package com.szakdolgozat.scheduler.timetable.domain;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.Setter;
 import org.optaplanner.core.api.domain.solution.PlanningEntityCollectionProperty;
@@ -19,11 +21,15 @@ public class TimeTable {
     @Getter
     @ValueRangeProvider
     @ProblemFactCollectionProperty
+    @NotEmpty
+    @Valid
     private List<TimeSlot> timeSlotList;
 
     @Getter
     @ValueRangeProvider
     @ProblemFactCollectionProperty
+    @NotEmpty
+    @Valid
     private List<Room> roomList;
 
     /*
@@ -36,6 +42,8 @@ public class TimeTable {
      */
     @Getter
     @PlanningEntityCollectionProperty
+    @NotEmpty
+    @Valid
     private List<Lesson> lessonList;
 
     @Getter

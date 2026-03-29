@@ -1,12 +1,17 @@
 package com.szakdolgozat.scheduler.timetable.domain;
 
+import jakarta.validation.constraints.NotNull;
+
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 
 public class TimeSlot {
 
+    @NotNull
     private DayOfWeek dayOfWeek;
+    @NotNull
     private LocalTime startTime;
+    @NotNull
     private LocalTime endTime;
 
     public TimeSlot() {

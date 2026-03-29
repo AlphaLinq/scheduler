@@ -1,6 +1,8 @@
 package com.szakdolgozat.scheduler.cloudbalancing.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import org.optaplanner.core.api.domain.solution.PlanningEntityCollectionProperty;
 import org.optaplanner.core.api.domain.solution.PlanningScore;
@@ -17,10 +19,14 @@ public class CloudBalance {
 
     @JsonProperty("processList")
     @PlanningEntityCollectionProperty
+    @NotEmpty
+    @Valid
     private List<CloudProcess> cloudProcessList;
 
     @ValueRangeProvider(id = "computerList")
     @ProblemFactCollectionProperty
+    @NotEmpty
+    @Valid
     private List<Computer> computerList;
 
     @PlanningScore

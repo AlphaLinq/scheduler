@@ -1,5 +1,7 @@
 package com.szakdolgozat.scheduler.timetable.domain;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.optaplanner.core.api.domain.entity.PlanningEntity;
@@ -11,15 +13,19 @@ public class Lesson {
 
         @Getter
         @PlanningId
+        @NotNull
         private Long id;
 
         @Getter
+        @NotBlank
         private String subject;
 
         @Getter
+        @NotBlank
         private String teacher;
 
         @Getter
+        @NotBlank
         private String studentGroup;
 
         @Setter

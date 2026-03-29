@@ -1,5 +1,6 @@
 package com.szakdolgozat.scheduler.cloudbalancing.domain;
 
+import jakarta.validation.constraints.Positive;
 import lombok.Getter;
 import org.optaplanner.core.api.domain.lookup.PlanningId;
 
@@ -8,9 +9,13 @@ public class Computer {
 
     @PlanningId
     private int id;
+    @Positive
     private int cpuPower;
+    @Positive
     private int memory;
+    @Positive
     private int networkBandwidth;
+    @Positive
     private int cost;
 
     public Computer() {

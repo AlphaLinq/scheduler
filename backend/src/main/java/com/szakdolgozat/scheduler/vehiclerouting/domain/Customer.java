@@ -1,5 +1,8 @@
 package com.szakdolgozat.scheduler.vehiclerouting.domain;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.Getter;
 import lombok.Setter;
 import org.optaplanner.core.api.domain.entity.PlanningEntity;
@@ -11,10 +14,14 @@ import org.optaplanner.core.api.domain.variable.PlanningVariable;
 public class Customer {
 
     @PlanningId
+    @NotNull
     private Long id;
 
+    @NotBlank
     private String name;
+    @NotNull
     private Location location;
+    @Positive
     private int demand;
     private int serviceDuration; // in minutes
     private Integer readyTime; // in minutes from depot start, null if no constraint

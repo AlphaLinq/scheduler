@@ -1,5 +1,7 @@
 package com.szakdolgozat.scheduler.cloudbalancing.domain;
 
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.Getter;
 import lombok.Setter;
 import org.optaplanner.core.api.domain.entity.PlanningEntity;
@@ -11,10 +13,14 @@ import org.optaplanner.core.api.domain.variable.PlanningVariable;
 public class CloudProcess {
 
     @PlanningId
+    @NotNull
     private Long id;
 
+    @Positive
     private int requiredCpuPower;
+    @Positive
     private int requiredMemory;
+    @Positive
     private int requiredBandwidth;
 
     @PlanningVariable(valueRangeProviderRefs = "computerList")

@@ -1,5 +1,7 @@
 package com.szakdolgozat.scheduler.vehiclerouting.domain;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import org.optaplanner.core.api.domain.lookup.PlanningId;
 
@@ -7,8 +9,10 @@ import org.optaplanner.core.api.domain.lookup.PlanningId;
 public class Location {
 
     @PlanningId
+    @NotNull
     private Long id;
 
+    @NotBlank
     private String name;
     private double latitude;
     private double longitude;
